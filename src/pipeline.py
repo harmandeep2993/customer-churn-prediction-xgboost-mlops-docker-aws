@@ -7,7 +7,7 @@ def full_preprocess_pipeline(df):
     df = convert_total_charges(df)
     df = encode_binary_columns(df)
 
-    # Optional: drop customerID if still present
+    # Drop customerID if still present
     if "customerID" in df.columns:
 
         df = drop_columns(df, ["customerID"])
