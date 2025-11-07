@@ -1,39 +1,28 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
-from src.pipeline import full_preprocess
-from src.predict import load_model, predict
+from src.predict import load_model, predict_churn
 
-# Initialize app and load model
 app = FastAPI()
-model = load_model("models/xgb_churn_model.pkl")
+model = load_model()
 
 # Define input schema
-class ChurnInput(BaseModel):
+class CustomerInput(BaseModel):
     gender: str
     SeniorCitizen: int
     Partner: str
     Dependents: str
     tenure: int
-    PhoneService: str
-    MultipleLines: str
-    InternetService: str
-    OnlineSecurity: str
-    OnlineBackup: str
-    DeviceProtection: str
-    TechSupport: str
-    StreamingTV: str
-    StreamingMovies: str
-    Contract: str
-    PaperlessBilling: str
-    PaymentMethod: str
     MonthlyCharges: float
-    TotalCharges: str  # handled as numeric later
+    TotalCharges: float
+    Contract: str
+    PaymentMethod: str
 
-# Define API route
 @app.post("/predict")
-def predict_churn(data: ChurnInput):
-    df = pd.DataFrame([data.dict()])
-    df = full_preprocess(df)
-    prediction = predict(model, df)[0]
-    return {"prediction": int(prediction)}
+def predict(input_data: CustomerInput):
+    data = pd.DataFrame([input_data.dict()])
+    pred, prob = predict_churn(data, model)
+    return {
+        "prediction": int(pred[0]),
+        "probability": float(prob[0])
+    }
