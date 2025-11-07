@@ -1,24 +1,40 @@
-from src.train_model import train_xgb_model
-
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+    classification_report
+)
 
 def evaluate_model(model, X_test, y_test):
     """
-    Predict and print evaluation metrics.
-    
+    Evaluate a classification model and print key metrics.
+
     Parameters:
-    - model: Trained classifier
-    - X_test: Test features
-    - y_test: True test labels
-    
+    - model: trained classifier
+    - X_test: test feature data
+    - y_test: true labels
+
     Returns:
-    - y_pred: Predicted labels
+    - metrics: dictionary with scores
+    - cm: confusion matrix
     """
     y_pred = model.predict(X_test)
-    
-    print("Confusion Matrix:")
-    print(confusion_matrix(y_test, y_pred))
-    print("\nClassification Report:")
+
+    metrics = {
+        "accuracy": accuracy_score(y_test, y_pred),
+        "precision": precision_score(y_test, y_pred),
+        "recall": recall_score(y_test, y_pred),
+        "f1_score": f1_score(y_test, y_pred),
+    }
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    print("=== Classification Report ===")
     print(classification_report(y_test, y_pred))
-    
-    return y_pred
+
+    print("=== Confusion Matrix ===")
+    print(cm)
+
+    return metrics, cm
