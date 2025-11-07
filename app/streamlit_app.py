@@ -4,7 +4,7 @@ from src.predict import load_model, predict_churn
 
 st.title("Customer Churn Prediction")
 
-# Load model once
+# Load model
 model = load_model()
 
 # Input fields
