@@ -26,9 +26,7 @@ def full_preprocess_pipeline(df):
     df = one_hot_encode(df, cat_cols)
 
     # Identify numerical columns (excluding target 'Churn') for scaling
-    num_cols = df.select_dtypes(include=["int64", "float64"]) \
-                 .drop(columns=["Churn"], errors="ignore") \
-                 .columns.tolist()
+    num_cols = df.select_dtypes(include=["int64", "float64"]).drop(columns=["Churn"], errors="ignore").columns.tolist()
 
     # Apply standard scaling to numerical features
     df = scale_numerical(df, num_cols)
