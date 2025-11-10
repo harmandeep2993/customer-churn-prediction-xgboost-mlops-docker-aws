@@ -1,34 +1,51 @@
 import pandas as pd
-from src.preprocess import (drop_columns, encode_binary_columns, convert_total_charges, one_hot_encode, scale_numerical)
+import joblib
+from sklearn.model_selection import train_test_split
+from src.preprocess import full_preprocess_pipeline
+from src.train_model import train_xgb_model
+from src.evaluate_model import evaluate_model
 
-# Define function for full transformation
-def full_preprocess_pipeline(df):
-    '''
-    Apply all preprocessing steps to a raw customer churn DataFrame.
-    Returns the cleaned, encoded, and scaled DataFrame.
+# 1. Load raw data
+raw_data_path = './data/raw/Customer-Churn.csv'
+df = pd.read_csv(raw_data_path)
 
-    '''
+# 2. Preprocess data
+df, encoder = full_preprocess_pipeline(df, fit_encoder=True)
+df.to_csv('./data/processed/churn_cleaned.csv', index=False)
+print('Data preprocessed and saved to ./data/processed/churn_cleaned.csv')
 
-    # Convert 'TotalCharges' to numeric, coerce invalid values to NaN
-    df = convert_total_charges(df)
+# Save encoder for reuse
+joblib.dump(encoder, 'models/onehot_encoder.pkl')
+print('Encoder saved to models/onehot_encoder.pkl')
 
-    # Encode binary categorical columns ('Yes'/'No') to 1/0
-    df = encode_binary_columns(df)
+# 3. Split data
+X = df.drop('Churn', axis=1)
+y = df['Churn']
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+print('Data split into training and test sets')
 
-    # Drop identifier column if present (e.g., 'customerID')
-    if "customerID" in df.columns:
-        df = drop_columns(df, ["customerID"])
+# 4. Define hyperparameter space
+param_dist = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [3, 5],
+    'learning_rate': [0.01, 0.1],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0],
+    'scale_pos_weight': [1, 2]
+}
 
-    # Identify categorical columns with >2 unique values
-    cat_cols = df.select_dtypes(include=["object", "bool"]).columns.tolist()
+# 5. Train and tune model
+model, best_params = train_xgb_model(X_train, y_train, param_dist)
+print('Model training complete')
+print(f'Best Parameters: {best_params}')
 
-    # Apply one-hot encoding to multi-class categorical features
-    df = one_hot_encode(df, cat_cols)
+# 6. Save model and training columns
+joblib.dump(model, 'models/xgb_churn_full_tuned.pkl')
+joblib.dump(X_train.columns.tolist(), 'models/train_columns.pkl')
+print('Model and feature list saved to models/')
 
-    # Identify numerical columns (excluding target 'Churn') for scaling
-    num_cols = df.select_dtypes(include=["int64", "float64"]).drop(columns=["Churn"], errors="ignore").columns.tolist()
-
-    # Apply standard scaling to numerical features
-    df = scale_numerical(df, num_cols)
-
-    return df
+# 7. Evaluate model
+print('=== Model Evaluation ===')
+evaluate_model(model, X_test, y_test)
