@@ -4,7 +4,7 @@ An end-to-end machine learning project that predicts customer churn using XGBoos
 ### Objective
 Predict whether a customer is likely to churn (cancel their service) based on account and usage features. The goal is to help businesses reduce customer loss and improve retention through data-driven actions.
 
-## Business Impact
+### Business Impact
 - Customer retention costs are significantly lower than acquiring new users.  
 - Early churn detection enables targeted offers and proactive customer support.  
 - Predictive analytics improve customer lifetime value and overall profitability.
@@ -44,30 +44,30 @@ customer-churn-prediction/
 
    1. **Exploratory Data Analysis (EDA)**
 
-   * Analyzed feature distributions and churn trends.
-   * Identified missing values and data imbalances.
+      * Analyzed feature distributions and churn trends.
+      * Identified missing values and data imbalances.
 
    2. **Preprocessing Pipeline**
 
-   * Encoded categorical and binary features.
-   * Scaled numerical variables.
-   * Built modular functions for reproducibility.
+      * Encoded categorical and binary features.
+      * Scaled numerical variables.
+      * Built modular functions for reproducibility.
 
    3. **Model Training and Tuning**
 
-   * Compared baseline models (Random Forest, XGBoost).
-   * Used RandomizedSearchCV for hyperparameter tuning.
-   * Handled class imbalance with `scale_pos_weight`.
+      * Compared baseline models (Random Forest, XGBoost).
+      * Used RandomizedSearchCV for hyperparameter tuning.
+      * Handled class imbalance with `scale_pos_weight`.
 
    4. **Model Evaluation**
 
-   * Measured performance with accuracy, precision, recall, F1-score, and confusion matrix.
-   * Selected the tuned XGBoost model (Round 2) for final deployment.
+      * Measured performance with accuracy, precision, recall, F1-score, and confusion matrix.
+      * Selected the tuned XGBoost model (Round 2) for final deployment.
 
    5. **Deployment**
 
-   * Developed a Streamlit web app for live predictions.
-   * Users can input customer data and receive churn probability.
+      * Developed a Streamlit web app for live predictions.
+      * Users can input customer data and receive churn probability.
 
 ### Model Performance
 
@@ -82,19 +82,18 @@ customer-churn-prediction/
 
 ### Key Learnings
 
-* Designed a modular, reusable ML pipeline.
-* Handled class imbalance using `scale_pos_weight`.
-* Tuned hyperparameters effectively with cross-validation.
-* Built and deployed a working Streamlit web app for predictions.
-* Practiced clean project structure and documentation for reproducibility.
+   * Designed a modular, reusable ML pipeline.
+   * Handled class imbalance using `scale_pos_weight`.
+   * Tuned hyperparameters effectively with cross-validation.
+   * Built and deployed a working Streamlit web app for predictions.
+   * Practiced clean project structure and documentation for reproducibility.
 
 ### Tech Stack
-
-* Python 3.10+
-* Pandas, NumPy, Scikit-learn, XGBoost
-* Matplotlib, Seaborn
-* Streamlit
-* Joblib
+   * Python 3.10+
+   * Pandas, NumPy, Scikit-learn, XGBoost
+   * Matplotlib, Seaborn
+   * Streamlit
+   * Joblib
 
 ### How to Run Locally
 
