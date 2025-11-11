@@ -156,9 +156,7 @@ Churn Probability: 22.50%
 
 ## Author
 Harmandeep Singh
-
 Machine Learning and Data Science Enthusiast
-
 Based in Germany
 
 - [LinkedIn](https://www.linkedin.com/in/harmandeep/) 
