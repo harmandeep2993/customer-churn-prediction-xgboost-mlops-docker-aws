@@ -8,7 +8,6 @@ from src.components.data_preprocessing import DataPreprocessing
 from src.components.model_trainer import ModelTrainer
 from src.components.model_evaluator import ModelEvaluator
 
-
 class ChurnPipeline:
     """End-to-end pipeline for training, evaluating, and saving churn model."""
 
@@ -37,7 +36,7 @@ class ChurnPipeline:
 
             # 3. Split
             X = df.drop("Churn", axis=1)
-            # ✅ FIX: Convert target variable to numeric
+            # FIX: Convert target variable to numeric
             y = df["Churn"].replace({"Yes": 1, "No": 0})
 
             X_train, X_test, y_train, y_test = train_test_split(
