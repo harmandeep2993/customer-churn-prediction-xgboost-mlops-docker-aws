@@ -1,29 +1,50 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
-from src.predict import load_model, predict_churn
+from src.components.model_predictor import ModelPredictor
 
-app = FastAPI()
-model = load_model()
+app = FastAPI(title="Customer Churn Prediction API", version="1.0")
 
-# Define input schema
+# load model once at startup
+predictor = ModelPredictor()
+model = predictor.load_model()
+
 class CustomerInput(BaseModel):
     gender: str
-    SeniorCitizen: int
+    SeniorCitizen: str
     Partner: str
     Dependents: str
     tenure: int
+    PhoneService: str
+    MultipleLines: str
+    InternetService: str
+    OnlineSecurity: str
+    OnlineBackup: str
+    DeviceProtection: str
+    TechSupport: str
+    StreamingTV: str
+    StreamingMovies: str
+    Contract: str
+    PaperlessBilling: str
+    PaymentMethod: str
     MonthlyCharges: float
     TotalCharges: float
-    Contract: str
-    PaymentMethod: str
 
-# Create Api to predict
+@app.get("/")
+def root():
+    return {"status": "API running", "message": "Use POST /predict for predictions."}
+
 @app.post("/predict")
-def predict(input_data: CustomerInput):
-    data = pd.DataFrame([input_data.dict()])
-    pred, prob = predict_churn(data, model)
-    return {
-        "prediction": int(pred[0]),
-        "probability": float(prob[0])
+def predict(data: CustomerInput):
+    predictor = ModelPredictor()
+    model = predictor.load_model()
+
+    # Convert input to DataFrame
+    input_df = pd.DataFrame([data.dict()])
+    pred, prob = predictor.predict_churn(input_df, model)
+
+    result = {
+        "prediction": "Churn" if pred[0] == 1 else "No Churn",
+        "probability": round(float(prob[0]), 4)
     }
+    return result
