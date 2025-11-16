@@ -2,7 +2,6 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from src.utils.logger import get_logger
 
-
 class ModelTrainer:
     """Handles training and tuning of XGBoost model."""
 
